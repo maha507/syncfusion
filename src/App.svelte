@@ -1,59 +1,68 @@
 <script>
-  import { afterUpdate } from 'svelte';
+  import { fade } from 'svelte/transition';
 
-  afterUpdate(() => {
-    document.querySelector('.js-todo-input').focus();
-  });
-
-  let todoItems = [];
-  let newTodo = '';
+  let todos = [];
 
   function addTodo() {
-    newTodo = newTodo.trim();
-    if (!newTodo) return;
-
-    const todo = {
-      text: newTodo,
-      checked: false,
-      id: Date.now(),
-    };
-
-    todoItems = [...todoItems, todo];
-    newTodo = '';
-  }
-
-  function toggleDone(id) {
-    const index = todoItems.findIndex(item => item.id === Number(id));
-    todoItems[index].checked = !todoItems[index].checked;
+    const input = document.querySelector('#todo-input');
+    const todo = input.value.trim();
+    if (todo !== '') {
+      todos = [...todos, { id: Date.now(), text: todo }];
+      input.value = '';
+    }
   }
 
   function deleteTodo(id) {
-    todoItems = todoItems.filter(item => item.id !== Number(id));
+    todos = todos.filter(todo => todo.id !== id);
   }
 </script>
 
 <main>
-  <div class="container">
-    <h1 class="app-title">todos</h1>
-    <ul class="todo-list">
-      {#each todoItems as todo (todo.id)}
-        <li class="todo-item {todo.checked ? 'done' : ''}">
-          <input id={todo.id} type="checkbox" />
-          <label for={todo.id} class="tick" on:click={() => toggleDone(todo.id)}></label>
-          <span>{todo.text}</span>
-          <button class="delete-todo" on:click={() => deleteTodo(todo.id)}>
-            <svg><use href="#delete-icon"></use></svg>
-          </button>
-        </li>
-      {/each}
-    </ul>
-    <div class="empty-state">
-      <svg class="checklist-icon"><use href="#checklist-icon"></use></svg>
-      <h2 class="empty-state__title">Add your first todo</h2>
-      <p class="empty-state__description">What do you want to get done today?</p>
-    </div>
-    <form on:submit|preventDefault={addTodo}>
-      <input class="js-todo-input" type="text" aria-label="Enter a new todo item" placeholder="E.g. Build a web app" bind:value={newTodo}>
-    </form>
+  <h1>TODO List</h1>
+  <h2>enter locations in india</h2>
+  <div class="input-group">
+    <input type="text" id="todo-input" placeholder="Enter a new TODO" />
+    <button on:click={addTodo}>Add</button>
   </div>
+  <ul>
+    {#each todos as todo (todo.id)}
+      <li transition:fade>
+        <span>{todo.text}</span>
+        <button on:click={() => deleteTodo(todo.id)}>delete</button>
+        
+      </li>
+    {/each}
+  
 </main>
+
+<style>
+  .input-group {
+    display: flex;
+    margin-bottom: 1rem;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    margin-right: 1rem;
+  }
+
+  button {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  button {
+    margin-left: auto;
+  }
+</style>
