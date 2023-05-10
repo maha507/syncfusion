@@ -1,11 +1,11 @@
 <script>
     let data = [
-      { id: 1, name: 'John', age: 35, mobileno:9874455332 },
-      { id: 2, name: 'Jane', age: 25, mobileno:8934235894},
-      { id: 3, name: 'Bob', age: 42, mobile:7676756767}
+      { id: 1, name: 'Janu', age: 35, mobileno:9874455332 },
+      { id: 2, name: 'maha', age: 22, mobileno:8934235894},
+      { id: 3, name: 'kaya', age: 42, mobileno:7676756767}
     ];
     
-    // Define a function to delete a row from the table
+    
     function deleteRow(id) {
       data = data.filter(item => item.id !== id);
     }
@@ -13,7 +13,7 @@
       data = [...data, newItem];
     }
   
-    // Define a function to update an existing row in the table
+
     function updateRow(id, newData) {
       data = data.map(item => item.id === id ? { ...item, ...newData } : item);
     }
@@ -32,6 +32,7 @@
     function update(event, id) {
       const formData = new FormData(event.target);
       const newData = {
+    
         name: formData.get('name'),
         age: formData.get('age'),
         mobileno:formData.get('mobileno')
