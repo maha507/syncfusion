@@ -2,7 +2,7 @@
     let data = [
       { id: 1, name: 'Janu', age: 35, mobileno:9874455332 },
       { id: 2, name: 'maha', age: 22, mobileno:8934235894},
-      { id: 3, name: 'kaya', age: 42, mobileno:7676756767}
+      { id: 3, name: 'kavya', age: 42, mobileno:7676756767}
     ];
     
     
