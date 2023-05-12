@@ -1,4 +1,4 @@
-# Svelte 3 Todo List App
+# syncfusion
 
 A Todo List Application built with Svelte 3. Tutorial: https://freshman.tech/svelte-todo/
 
