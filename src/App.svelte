@@ -1,8 +1,7 @@
 <script>
-  let applicants = [
-    { names: ['task 1', 'task 2', 'task 3'] },
-    { names: ['task 4', 'task 5'] },
-    { names: ['Task 6', 'Task 7', 'Task 8'] }
+  let applicants = [    { names: ['task 8', 'task 7', 'task 3'] },
+    { names: ['task 3', 'task 5'] },
+    { names: ['Task 6', 'Task 1', 'Task 2'] }
   ];
 
   let hoveringOverApplicant = null;
@@ -13,23 +12,23 @@
   }
 
   function drop(event, applicantIndex, nameIndex = null) {
-event.preventDefault();
-const json = event.dataTransfer.getData('text/plain');
-const data = JSON.parse(json);
+    event.preventDefault();
+    const json = event.dataTransfer.getData('text/plain');
+    const data = JSON.parse(json);
 
-if (nameIndex !== null) {
-  // Reordering names within the same applicant
-  const [name] = applicants[data.applicantIndex].names.splice(data.nameIndex, 1);
-  applicants[applicantIndex].names.splice(nameIndex, 0, name);
-} else {
-  // Moving name to a different applicant
-  const [name] = applicants[data.applicantIndex].names.splice(data.nameIndex, 1);
-  applicants[applicantIndex].names.push(name);
-}
+    if (nameIndex !== null) {
+      // Reordering names within the same applicant
+      const [name] = applicants[data.applicantIndex].names.splice(data.nameIndex, 1);
+      applicants[applicantIndex].names.splice(nameIndex, 0, name);
+    } else {
+      // Moving name to a different applicant
+      const [name] = applicants[data.applicantIndex].names.splice(data.nameIndex, 1);
+      applicants[applicantIndex].names.push(name);
+    }
 
-applicants = [...applicants]; // Make a copy to trigger reactivity
-hoveringOverApplicant = null;
-}
+    hoveringOverApplicant = null;
+    applicants = [...applicants]; // Make a copy to trigger reactivity
+  }
 
   function deleteName(applicantIndex, nameIndex) {
     applicants[applicantIndex].names.splice(nameIndex, 1);
@@ -54,18 +53,26 @@ hoveringOverApplicant = null;
   {#each applicants as applicant, i}
     <div
       class="applicant"
-      on:dragover={() => hoveringOverApplicant = i}
-      on:drop={() => drop(Event, i)}
+      on:dragover={(event) => {
+        event.preventDefault();
+        hoveringOverApplicant = i;
+      }}
+      on:drop={(event) => drop(event, i, null)}
       on:dragleave={() => hoveringOverApplicant = null}
       style="background-color: {i === hoveringOverApplicant ? 'lightgray' : 'white'};"
     >
-      <h2>these Tasks are in  {i + 1} <button on:click={() => addName(i)}>Add Name</button></h2>
+      <h2>Tasks in Stage {i + 1} <button on:click={() => addName(i)}>Add task</button></h2>
       <ul>
         {#each applicant.names as name, j}
           <li
             class="name"
             draggable="true"
-            on:dragstart={() => dragStart(Event, i, j)}
+            on:dragstart={(event) => dragStart(event, i, j)}
+            on:dragover={(event) => {
+              event.preventDefault();
+              hoveringOverApplicant = i;
+            }}
+            on:drop={(event) => drop(event, i, j)}
           >
             <div style="display: flex; align-items: center;">
               <span>{name}</span>
@@ -77,17 +84,19 @@ hoveringOverApplicant = null;
           </li>
         {/each}
       </ul>
-    </div>
+  </div>
   {/each}
 </div>
 
 <style>
   .applicants {
+      
     display: flex;
     justify-content: space-between;
   }
 
   .applicant {
+     
     width: 400px;
     padding: 20px;
     border: 1px solid black;
@@ -95,12 +104,14 @@ hoveringOverApplicant = null;
   }
 
   .name {
+    background-color: aquamarine;
     cursor: move;
     margin: 5px;
-    padding: 10px;
+    padding: 5px;
     border: 1px solid black;
     display: flex;
     justify-content: space-between;
   }
 </style>
+
 
